@@ -1,0 +1,20 @@
+<extend name="Layout/Home" />
+<block name="content">
+<div class="container">
+        <ul class="breadcrumb">
+          <li>
+            <a href="">
+              <i class="fa fa-home"></i>
+            </a>
+          </li>
+          <li>
+            <a href="#">购物车内的商品</a>
+          </li>	
+        </ul>
+        <div class="row">
+          <div id="content" class="col-sm-12">
+           <include file="Checkout/cartContent" />
+          </div>
+        </div>
+</div>
+</block>

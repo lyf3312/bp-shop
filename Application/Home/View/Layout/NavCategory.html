@@ -1,0 +1,63 @@
+   <div class="main-menu-wrapper">
+        <div class="container">
+          <div class="main-menu-mobile">
+            菜单
+            <span class="main-menu-toggle">
+              <i class="fa fa-bars"></i>
+            </span>
+          </div>
+          <div class="main-menu-container">
+            <ul class="main-menu">
+              <li class="parent">
+                <a href="/index.php">首页</a>
+              </li>
+      <volist name="category_nested" id="cat_one">
+        <if condition="!empty($cat_one['nested'])">
+              <li class="parent with-sub-menu">
+                <a href="">{$cat_one['title']}</a>
+                <div class="open-sub-menu">+</div>
+                <ul class="sub-menu">
+                <volist name="cat_one['nested']" id ="cat_two"> 
+                  <if condition="!empty($cat_two['nested'])">
+                        <li>
+                            <a href="">{$cat_two['title']}</a>
+                            <div class="open-sub-menu">+</div>
+                          <ul class="second-menu">
+                              <volist name="cat_two['nested']" id="cat_three">
+                                    <li>
+                                      <a href="">{$cat_three['title']}</a>
+                                    </li>
+                              </volist>
+                          </ul>
+                        </li>
+                  <else />
+                        <li>
+                          <a href="">{$cat_two['title']}</a>
+                        </li>
+                  </if>     
+                </volist>
+                </ul>
+              </li>
+        <else />
+              <li class="parent ">
+                <a href="">{$cat_one['title']}</a>
+              </li>
+        </if>
+      </volist>
+            </ul>
+          </div>
+          <script>
+              $('.sub-menu>li').mouseenter(function(e){
+                $(this).parent().find('ul.second-menu').hide().eq($(this).index()).show();
+              });
+          </script>
+          <div id="search" class="input-group">
+            <input type="text" name="search" value="" placeholder="搜索" class="form-control" />
+            <span class="input-group-btn">
+              <button type="button" class="btn btn-primary">
+                <i class="fa fa-search"></i>
+              </button>
+            </span>
+          </div>
+        </div>
+      </div>

@@ -1,0 +1,195 @@
+<extend name="Layout/back" />
+<block name="content">
+
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="pull-right">
+        <a class="btn btn-primary" title="" data-toggle="tooltip" href="{:U('Back/Shop/add')}" data-original-title="新增"> <i class="fa fa-plus"></i>
+        </a>
+        <button onclick="confirm('确认？') ? $('#form-product').submit() : false;" class="btn btn-danger" title="" data-toggle="tooltip" type="button" data-original-title="删除">
+          <i class="fa fa-trash-o"></i>
+        </button>
+      </div>
+      <h1>商品管理</h1>
+      <ul class="breadcrumb">
+        <li>
+          <a href="">首页</a>
+        </li>
+        <li>
+          <a href="">商品管理</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="container-fluid">
+  		
+      <div class="panel-heading">
+        <h3 class="panel-title">
+          <i class="fa fa-list"></i>
+          商品列表
+        </h3>
+      </div>
+      <div class="panel-body">
+        <div class="well">
+            <form action="{:U('Back/Shop/list')}" method="get">
+            <div class="row">
+              <div class="col-sm-4">
+                <div class="form-group">
+                  <label class="control-label" for="input-name">商品名称</label>
+  <input type="text" name="filter_name" value="{$filter_name}" placeholder="商品名称" id="input-name" class="form-control" />
+                </div>
+              </div>
+              <div class="col-sm-2">
+                <div class="form-group">
+                  <label class="control-label" for="input-price">价格下限</label>
+  <input type="text" name="filter_price_min" value="{$filter_price_min}" placeholder="价格-下限" id="input-price" class="form-control" />
+                </div>
+              </div>
+              <div class="col-sm-2">
+                <div class="form-group">
+                  <label class="control-label" for="input-price">价格上限</label>
+  <input type="text" name="filter_price_max" value="{$filter_price_max}" placeholder="价格-上限" id="input-price" class="form-control" />
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="form-group">
+                  <label class="control-label" for="input-status">状态</label>
+  <select name="filter_status" id="input-status" class="form-control">
+      <option value="">全部</option>
+    <if condition="$filter_status eq '1'">
+      <option value="1" selected="selected">启用</option>
+    <else />
+      <option value="1">启用</option>
+    </if>
+    <if condition="$filter_status eq '0'">
+      <option value="0" selected>停用</option>
+    <else />
+      <option value="0">停用</option>
+    </if>
+  </select>
+                </div>
+                <button type="submit" id="button-filter" class="btn btn-primary pull-right">
+                  <i class="fa fa-search"></i>
+                  筛选
+                </button>
+              </div>
+            </div>
+            </form>
+        </div>
+        <form action="{:U('Shop/remove')}" method="post" enctype="multipart/form-data" id="form-product">
+          <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+              <thead>
+                <tr>
+                  <td style="width: 1px;" class="text-center">
+                    <input onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" type="checkbox">
+                  </td>
+                  <td class="text-center">图片</td>
+                  <td class="text-left">
+                  <!-- 增加php代码处理排序问题 -->
+<?php
+   $order_param = $search_cond;
+   $order_param['order_field'] = 'name';
+   $order_param['order_method'] = 'asc';
+   if($_GET['order_field'] == 'name'){
+      //已经按name排序了，排序方式翻转
+      $order_param['order_method'] = $_GET['order_method'] == 'asc' ? 'desc' : 'asc';
+      //css排序类，asc或者desc
+      $order_class=$order_param['order_method'];
+   }else{
+      //当前字段没有进行排序
+      $order_class='';      
+   }
+?>
+                    <a href="{:U('Back/Shop/list',$order_param)}" class="{$order_class}">商品名称</a>
+                  </td>
+                  <td class="text-left">
+                    <a href="">UPC</a>
+                  </td>
+                  <td class="text-right">
+<?php
+    $order_param['order_field'] = 'price';
+    // 如果当前已经依据该字段 排序了
+    if ($_REQUEST['order_field'] == 'price') {
+      // 将排序方式 反转
+      $order_param['order_method'] = $_REQUEST['order_method'] == 'asc' ? 'desc' : 'asc';
+      // 当前按照该字段排序
+      $order_class = $order_param['order_method'];
+    } else {
+      // 当前没有依据该字段排序
+      $order_class = '';
+    }
+
+  ?>                  
+                 <a href="{:U('Back/Shop/list',$order_param)}" class="{$order_class}">价格</a>
+                  </td>
+                  <td class="text-right"> 
+  <?php
+    $order_param['order_field'] = 'quantity';
+    // 如果当前已经依据该字段 排序了
+    if ($_REQUEST['order_field'] == 'quantity') {
+      // 将排序方式 反转
+      $order_param['order_method'] = $_REQUEST['order_method'] == 'asc' ? 'desc' : 'asc';
+      // 当前按照该字段排序
+      $order_class = $order_param['order_method'];
+    } else {
+      // 当前没有依据该字段排序
+      $order_class = '';
+    }
+  ?>
+                   <a href="{:U('Back/Shop/list', $order_param)}"  class="{$order_class}">数量</a>
+                  <td class="text-left">
+                    <a href="">状态</a>
+                  </td>
+                  <td class="text-right">管理</td>
+                </tr>
+              </thead>
+              <tbody>
+    <volist name="goods_list" id="goods">
+                <tr>
+                  <td class="text-center">
+                    <input name="selected[]" value="{$goods[
+                    goods_id]}" type="checkbox">
+                  </td>
+                  <td class="text-center">
+                    <img src="__UPLOAD__Back/Goods/{$goods['image_thumb']}"  alt="{$goods['name']}" class="img-thumbnail" style="max-width: 40px">
+                  </td>
+                  <td class="text-left">{$goods['name']}</td>
+                  <td class="text-left">{$goods['upc']}</td>
+                  <td class="text-right">
+                    <span style="text-decoration: line-through;">{$goods['price']}</span>
+                    <br>
+                    <div class="text-danger">0000.0000</div>
+                  </td>
+                  <td class="text-right">
+                    <span class="label label-success">{$goods['quantity']}</span>
+                  </td>
+                  <td class="text-left">
+                      <if condition="$goods['status'] eq 1">
+                            启用
+                      <else />
+                            禁用
+                      </if>
+                  </td>
+                  <td class="text-right">
+                    <a data-original-title="编辑" href="{:U('Back/Shop/edit',['goods_id'=>$goods['goods_id']])}" data-toggle="tooltip" title="编辑" class="btn btn-primary">
+                      <i class="fa fa-pencil"></i>
+                    </a>
+                    <a href="{:U('Back/Shop/option',['id'=>$goods['goods_id']])}" data-toggle="tooltip" title="选项管理" class="btn btn-primary">
+                      <i class="fa">O</i>
+                    </a>
+                  </td>
+                </tr>
+    </volist>              
+              </tbody>
+            </table>
+          </div>
+        </form>
+        <div class="row">
+          {$page_html}
+      </div>
+    
+  </div>
+</div>
+</block>

@@ -1,0 +1,157 @@
+<extend name="Layout/back" />
+<block name="content">
+	<div id="content">
+    <div class="page-header">
+      <div class="container-fluid">
+        <div class="pull-right">
+          <button class="btn btn-primary" title="" data-toggle="tooltip" form="form-product" type="submit" data-original-title="保存">
+            <i class="fa fa-save"></i>
+          </button>
+          <a class="btn btn-default" title="" data-toggle="tooltip" href="" data-original-title="取消">
+            <i class="fa fa-reply"></i>
+          </a>
+        </div>
+        <h1>商品管理</h1>
+        <ul class="breadcrumb">
+          <li>
+            <a href="">首页</a>
+          </li>
+          <li>
+            <a href="">商品选项管理</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="container-fluid">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">
+            <i class="fa fa-pencil"></i>
+            商品选项管理
+          </h3>
+        </div>
+        <div class="panel-body">
+          <form class="form-horizontal" id="form-product" enctype="multipart/form-data" method="post" action="">
+            <ul class="nav nav-tabs">
+              <li class="active">
+                <a data-toggle="tab" href="#tab-option">选项设置</a>
+              </li>
+            </ul>
+            <div class="tab-content">
+
+              <div id="tab-option" class="tab-pane active">
+                <div class="row">
+        <if condition="empty($option_attr_list)">
+        		 <div style="text-align:center;">暂无选项可设置</div>
+       	<else/>
+      
+                <div class="col-sm-2">
+                    <ul id="option" class="nav nav-pills nav-stacked">
+           	<volist name="option_attr_list" id="option_attr">
+           		<if condition="$i eq 1">
+                      <li class="active">
+                <else/>
+                	  <li>
+                </if>
+                        <a data-toggle="tab" href="#tab-option{$option_attr['attribute_id']}" aria-expanded="true">
+                          <i onclick="$('a[href=\'#tab-option{$option_attr['attribute_id']}\']').parent().remove(); $('#tab-option{$option_attr['attribute_id']}').remove(); $('#option a:first').tab('show');" class="fa fa-minus-circle"></i>
+                          {$option_attr['a_title']}
+                        </a>
+                      </li>
+            </volist>
+                    </ul>
+                  </div>
+                  <div class="col-sm-10">
+                    <div class="tab-content">
+                <volist name="option_attr_list" id="option_attr">
+                	<if condition="$i eq 1">
+                      <div id="tab-option{$option_attr['attribute_id']}" class="tab-pane active">
+                    <else/>
+                      <div id="tab-option{$option_attr['attribute_id']}" class="tab-pane">
+                    </if>
+                        <div class="table-responsive">
+                          <table class="table table-striped table-bordered table-hover" id="option-value0">
+                            <thead>
+                              <tr>
+                                <td class="text-left">选项值</td>
+                                <td class="text-right">商品数量</td>
+                                <td class="text-right">销售价格</td>
+                                <td>可用</td>
+                              </tr>
+                            </thead>
+                            <tbody>
+                    <volist name="option_attr['option_list']" id="option">
+                              <tr id="option-value-row{$key}">
+                                <td class="text-left">
+                                  {$option['title']}
+                                </td>
+                                <td class="text-right">
+                                  <input type="text" class="form-control" placeholder="商品数量" value="{$option['quantity']}" name="option[{$option['id']}][quantity]">
+                                </td>
+                                <td class="text-right">
+                                  <select class="form-control" name="option[{$option['id']}][price_operate]">
+                                <if condition="$option['price_operate'] eq 1">
+                                    <option selected="selected" value="1">+</option>
+                                     <option value="0">-</option>
+                                </if>
+                                <if condition="$option['price_operate'] eq 0">
+                                 <option  value="1">+</option>
+                                    <option selected="selected" value="0">-</option>
+                                </if>
+                                  </select>
+                                  <input type="text" class="form-control" placeholder="销售价格" value="{$option['price_drift']}" name="option[{$option['id']}][price_drift]">
+                                </td>
+                                <td class="text-left">
+                                <if condition="$option['status'] eq 1"> 
+									<input type="checkbox" checked="checked" value="1" name="option[{$option['id']}][status]" class="form-control">
+                                <else/>
+                               		 <input type="checkbox" value="1" name="option[{$option['id']}][status]" class="form-control">
+                                </if>                                  
+                                </td>
+                              </tr>
+          			</volist>
+                            </tbody>
+                          </table>
+                        </div>                       
+                      </div>
+                    </volist>  
+                   
+                    </div>
+                  </div>
+        </if>
+                </div>
+              </div>
+
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+&lt;!--
+$('#input-description').summernote({height: 600});
+//--&gt;
+</script>
+
+    <script type="text/javascript">&lt;!--
+$('.date').datetimepicker({
+  pickTime: false
+});
+
+$('.time').datetimepicker({
+  pickDate: false
+});
+
+$('.datetime').datetimepicker({
+  pickDate: true,
+  pickTime: true
+});
+//--&gt;</script>
+    <script type="text/javascript">
+&lt;!--
+  $('#option a:first').tab('show');
+//--&gt;
+</script>
+  </div>
+
+</block>
